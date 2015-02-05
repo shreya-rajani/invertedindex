@@ -1,0 +1,87 @@
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.TreeMap;
+
+/**
+ * Gets the word, file path and the position and adds to the outer and the inner
+ * tree Maps
+ * 
+ * @author shreyarajani
+ * 
+ */
+
+public class InvertedIndex {
+	/**
+	 * Declares the TreeMap - index
+	 */
+
+	private final TreeMap<String, TreeMap<String, ArrayList<Integer>>> index;
+
+	public InvertedIndex() {
+		index = new TreeMap<>();
+	}
+
+	/**
+	 * Checks for the conditions and enters the word, absolute path and the
+	 * position in the inverted index
+	 * 
+	 * @param word
+	 * @param file
+	 * @param pos
+	 */
+	public void addEntry(String word, String file, int pos) {
+		TreeMap<String, ArrayList<Integer>> map1;
+
+		if (!index.containsKey(word)) {
+			map1 = new TreeMap<String, ArrayList<Integer>>();
+			ArrayList<Integer> list = new ArrayList<Integer>();
+			list.add(pos);
+			map1.put(file, list);
+			index.put(word, map1);
+		} else if (index.containsKey(word)) {
+			map1 = index.get(word);
+
+			if (map1.containsKey(file)) {
+				map1.get(file).add(pos);
+			} else {
+				ArrayList<Integer> posList = new ArrayList<Integer>();
+				posList.add(pos);
+				map1.put(file, posList);
+			}
+		}
+	}
+
+	/**
+	 * Prints the word, absolute path and the positions in the new text file
+	 * 
+	 * @param outfile
+	 */
+
+	public void printIndex(String outfile) {
+
+		try (BufferedWriter br = Files.newBufferedWriter(Paths.get(outfile),
+				Charset.forName("UTF-8"));
+				PrintWriter writer = new PrintWriter(br);) {
+			for (String word : index.keySet()) {
+				writer.println(word);
+				TreeMap<String, ArrayList<Integer>> inner_map = index.get(word);
+				for (String fileName : inner_map.keySet()) {
+					ArrayList<Integer> positions = inner_map.get(fileName);
+					writer.print("\"" + fileName + "\"");
+					for (int pos : positions) {
+						writer.print(", " + pos);
+					}
+					writer.println();
+				}
+				writer.println();
+			}
+		} catch (IOException ioe) {
+			System.out.println(ioe);
+		}
+	}
+}

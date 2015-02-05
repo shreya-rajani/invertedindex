@@ -1,0 +1,129 @@
+10
+
+dir
+60
+https://www.cs.usfca.edu/svn/ssrajani2/cs212/project2
+https://www.cs.usfca.edu/svn/ssrajani2
+
+
+
+2013-11-08T02:42:11.034094Z
+60
+sjengle
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+393b24fa-5e4b-49af-9b1e-08b937af8777
+
+.classpath
+file
+0
+
+
+add
+
+.project
+file
+0
+
+
+add
+
+.settings
+dir
+
+
+
+add
+
+input
+dir
+
+
+
+add
+
+invertedindex-baddir.txt
+file
+0
+
+
+add
+
+invertedindex-gutenberg.txt
+file
+0
+
+
+add
+
+invertedindex-index.txt
+file
+0
+
+
+add
+
+invertedindex-reversed.txt
+file
+0
+
+
+add
+
+invertedindex-rfcs.txt
+file
+0
+
+
+add
+
+invertedindex.txt
+file
+0
+
+
+add
+
+output
+dir
+
+
+
+add
+
+searchresults-index-alphabet.txt
+file
+0
+
+
+add
+
+searchresults-index-simple.txt
+file
+0
+
+
+add
+
+src
+dir
+
+tests
+dir
+
+
+
+add
+

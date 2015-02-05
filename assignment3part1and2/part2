@@ -1,0 +1,1004 @@
+#include <GLUT/glut.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
+
+int ortho=GL_FALSE;
+int pers=GL_FALSE;
+int trans = GL_FALSE;
+int hand1 = GL_FALSE;
+int cube1 = GL_FALSE;
+int ball1 = GL_FALSE;
+int hand2 = GL_FALSE;
+int cube2 = GL_FALSE;
+int ball2 = GL_FALSE;
+int hand3 = GL_FALSE;
+int cube3 = GL_FALSE;
+int ball3 = GL_FALSE;
+int color = GL_FALSE;
+GLdouble wx, wy, wz;
+
+// angle of rotation for the camera direction
+float angle=0.0;
+// actual vector representing the camera’s direction
+float lx=0.0f,lz=-1.0f;
+// XZ position of the camera
+float px=0.0f,pz=5.0f;
+GLdouble oldx, oldy, wz, newx, newy;
+
+int v=0, f0,f1, f2, f3;
+float x=0,y=0,z=0;
+int num_points, tot_faces, num_lines;
+float minx, miny, minz, maxx, maxy, maxz;
+
+struct face{
+    int num_faces;
+    int f[6];
+    float nx, ny, nz;
+};
+
+struct vertices{
+    float x, y, z;
+    float fx, fy, fz;
+    float vnx, vny, vnz;
+    int eachctr;
+};
+
+struct face face_array1[100000];
+struct vertices vertices_array1[100000];
+
+int num_points2, tot_faces2, num_lines2;
+float minx2, miny2, minz2, maxx2, maxy2, maxz2;
+struct face face_array2[100000];
+struct vertices vertices_array2[100000];
+
+int num_points3, tot_faces3, num_lines3;
+float minx3, miny3, minz3, maxx3, maxy3, maxz3;
+struct face face_array3[100000];
+struct vertices vertices_array3[100000];
+
+int num_points4, tot_faces4, num_lines4;
+float minx4, miny4, minz4, maxx4, maxy4, maxz4;
+struct face face_array4[100000];
+struct vertices vertices_array4[100000];
+
+float v1x, v1y, v1z, v2x, v2y, v2z;
+float xt1=0, yt1=0, zt1=0, xr1=0, yr1=0, zr1=0, xs1=0, ys1=0, zs1=0, rr1=0;
+float xt2=0, yt2=0, zt2=0, xr2=0, yr2=0, zr2=0, xs2=0, ys2=0, zs2=0, rr2=0;
+float xt3=0, yt3=0, zt3=0, xr3=0, yr3=0, zr3=0, xs3=0, ys3=0, zs3=0, rr3=0;
+
+FILE *fr1, *fr2, *fr3, *fr4, *frtrans;
+size_t len;
+char t1, r1, s1;
+char t2, r2, s2;
+char t3, r3, s3;
+
+//Getting the file name from the command line
+void fileread(char *argv[]){
+
+    char ch;
+    int lines=0;
+
+    frtrans = fopen(argv[1],"r"); //from command line arugments
+    fr1 = fopen("/Users/shreyarajani/Desktop/mesh/hand.off", "r");
+    fr2 = fopen("/Users/shreyarajani/Desktop/mesh/sphere.off", "r");
+    fr3 = fopen("/Users/shreyarajani/Desktop/mesh/cube.off", "r");
+
+//    //ch = getc(fr) ;
+//
+    if(!frtrans)
+    {
+        printf("Can't open file\n");
+    }
+
+    char firstlinet[20], secondlinet[20], thirdlinet[20];
+
+    fscanf(frtrans, "%s\n", firstlinet);
+    //printf("%c", firstlinet[0]);
+
+
+    if(firstlinet[0] == 'h'){
+        hand1 = GL_TRUE;
+        fscanf(frtrans, "%c %f %f %f\n", &t1, &xt1, &yt1, &zt1);
+        //printf("%c %f %f %f\n", t1, xt1, yt1, zt1);
+        fscanf(frtrans, "%c %f %f %f %f\n", &r1, &rr1, &xr1, &yr1, &zr1);
+        //printf("%c %f %f %f\n", r1, xr1, yr1, zr1);
+        fscanf(frtrans, "%c %f %f %f\n", &s1, &xs1, &ys1, &zs1);
+        //printf("%c %f %f %f\n", s1, xs1, ys1, zs1);
+    }
+
+    else if(firstlinet[0] == 'c'){
+        cube1 = GL_TRUE;
+        fscanf(frtrans, "%c %f %f %f\n", &t1, &xt1, &yt1, &zt1);
+        fscanf(frtrans, "%c %f %f %f %f\n", &r1, &rr1, &xr1, &yr1, &zr1);
+        fscanf(frtrans, "%c %f %f %f\n", &s1, &xs1, &ys1, &zs1);
+
+    }
+
+    else if(firstlinet[0] == 'b'){
+        ball1 = GL_TRUE;
+        fscanf(frtrans, "%c %f %f %f\n", &t1, &xt1, &yt1, &zt1);
+        fscanf(frtrans, "%c %f %f %f %f\n", &r1, &rr1, &xr1, &yr1, &zr1);
+        fscanf(frtrans, "%c %f %f %f\n", &s1, &xs1, &ys1, &zs1);
+    }
+
+    fscanf(frtrans, "%s\n", secondlinet);
+
+
+    if(secondlinet[0] == 'h'){
+        hand2 = GL_TRUE;
+        fscanf(frtrans, "%c %f %f %f\n", &t2, &xt2, &yt2, &zt2);
+        fscanf(frtrans, "%c %f %f %f %f\n", &r2, &rr2, &xr2, &yr2, &zr2);
+        fscanf(frtrans, "%c %f %f %f\n", &s2, &xs2, &ys2, &zs2);
+    }
+
+    else if(secondlinet[0] == 'c'){
+        cube2 = GL_TRUE;
+        fscanf(frtrans, "%c %f %f %f\n", &t2, &xt2, &yt2, &zt2);
+        fscanf(frtrans, "%c %f %f %f %f\n", &r2, &rr2, &xr2, &yr2, &zr2);
+        fscanf(frtrans, "%c %f %f %f\n", &s2, &xs2, &ys2, &zs2);
+
+    }
+
+    else if(secondlinet[0] == 'b'){
+        ball2 = GL_TRUE;
+        fscanf(frtrans, "%c %f %f %f\n", &t2, &xt2, &yt2, &zt2);
+        fscanf(frtrans, "%c %f %f %f %f\n", &r2, &rr2, &xr2, &yr2, &zr2);
+        fscanf(frtrans, "%c %f %f %f\n", &s2, &xs2, &ys2, &zs2);
+    }
+
+    fscanf(frtrans, "%s\n", thirdlinet);
+
+
+    if(thirdlinet[0] == 'h'){
+        hand3 = GL_TRUE;
+        fscanf(frtrans, "%c %f %f %f\n", &t3, &xt3, &yt3, &zt3);
+        fscanf(frtrans, "%c %f %f %f %f\n", &r3, &rr3, &xr3, &yr3, &zr3);
+        fscanf(frtrans, "%c %f %f %f\n", &s3, &xs3, &ys3, &zs3);
+    }
+
+    else if(thirdlinet[0] == 'c'){
+        cube3 = GL_TRUE;
+        fscanf(frtrans, "%c %f %f %f\n", &t3, &xt3, &yt3, &zt3);
+        fscanf(frtrans, "%c %f %f %f %f\n", &r3, &rr3, &xr3, &yr3, &zr3);
+        fscanf(frtrans, "%c %f %f %f\n", &s3, &xs3, &ys3, &zs3);
+
+    }
+
+    else if(thirdlinet[0] == 'b'){
+        ball3 = GL_TRUE;
+        fscanf(frtrans, "%c %f %f %f\n", &t3, &xt3, &yt3, &zt3);
+        fscanf(frtrans, "%c %f %f %f %f\n", &r3, &rr3, &xr3, &yr3, &zr3);
+        fscanf(frtrans, "%c %f %f %f\n", &s3, &xs3, &ys3, &zs3);
+    }
+
+    if(!fr1)
+    {
+        printf("Can't open file\n");
+    }
+
+    char firstline[20];
+
+    fscanf(fr1, "%s\n", firstline);
+    fscanf(fr1, "%d %d %d\n", &num_points, &tot_faces, &num_lines);
+
+    //while((ch = fgetc(fr) ) != (num_points + 1)){ // EOF for the end of the file
+    // printf("%c",ch); // prints the all content of the file
+
+
+    for(int i=0; i<num_points; i++){
+        //num_points = 8
+        fscanf(fr1, "%f %f %f\n", &vertices_array1[i].x, &vertices_array1[i].y, &vertices_array1[i].z);
+        vertices_array1[i].fx = 0;
+        vertices_array1[i].fy = 0;
+        vertices_array1[i].fz = 0;
+    }
+
+    for(int i=0; i<tot_faces ; i++){
+        //tot_faces = 6
+        fscanf(fr1, "%d\n", &face_array1[i].num_faces);
+
+        if(face_array1[i].num_faces==3){
+            fscanf(fr1, "%d %d %d\n", &face_array1[i].f[0], &face_array1[i].f[1], &face_array1[i].f[2]);
+        }
+        if(face_array1[i].num_faces==4){
+            fscanf(fr1, "%d %d %d %d\n", &face_array1[i].f[0], &face_array1[i].f[1], &face_array1[i].f[2], &face_array1[i].f[3]);
+        }
+    }
+    fclose(fr1);
+
+    if(!fr1)
+    {
+        printf("Can't open file\n");
+    }
+
+// ** 2nd file-----------------------------------------------------------------------------------------
+
+    fscanf(fr2, "%s\n", firstline);
+    fscanf(fr2, "%d %d %d\n", &num_points2, &tot_faces2, &num_lines2);
+
+    //while((ch = fgetc(fr) ) != (num_points + 1)){ // EOF for the end of the file
+    // printf("%c",ch); // prints the all content of the file
+
+
+    for(int i=0; i<num_points2; i++){
+        //num_points = 8
+        fscanf(fr2, "%f %f %f\n", &vertices_array2[i].x, &vertices_array2[i].y, &vertices_array2[i].z);
+        vertices_array2[i].fx = 0;
+        vertices_array2[i].fy = 0;
+        vertices_array2[i].fz = 0;
+    }
+
+    for(int i=0; i<tot_faces2 ; i++){
+        //tot_faces = 6
+        fscanf(fr2, "%d\n", &face_array2[i].num_faces);
+
+        if(face_array2[i].num_faces==3){
+            fscanf(fr2, "%d %d %d\n", &face_array2[i].f[0], &face_array2[i].f[1], &face_array2[i].f[2]);
+        }
+        if(face_array2[i].num_faces==4){
+            fscanf(fr2, "%d %d %d %d\n", &face_array2[i].f[0], &face_array2[i].f[1], &face_array2[i].f[2], &face_array2[i].f[3]);
+        }
+    }
+    fclose(fr2);
+
+    // ** 3rd file-----------------------------------------------------------------------------------------
+
+    fscanf(fr3, "%s\n", firstline);
+    fscanf(fr3, "%d %d %d\n", &num_points3, &tot_faces3, &num_lines3);
+
+    for(int i=0; i<num_points3; i++){
+        //num_points = 8
+        fscanf(fr3, "%f %f %f\n", &vertices_array3[i].x, &vertices_array3[i].y, &vertices_array3[i].z);
+        vertices_array3[i].fx = 0;
+        vertices_array3[i].fy = 0;
+        vertices_array3[i].fz = 0;
+    }
+
+    for(int i=0; i<tot_faces3 ; i++){
+        //tot_faces = 6
+        fscanf(fr3, "%d\n", &face_array3[i].num_faces);
+
+        if(face_array3[i].num_faces==3){
+            fscanf(fr3, "%d %d %d\n", &face_array3[i].f[0], &face_array3[i].f[1], &face_array3[i].f[2]);
+        }
+        if(face_array3[i].num_faces==4){
+            fscanf(fr3, "%d %d %d %d\n", &face_array3[i].f[0], &face_array3[i].f[1], &face_array3[i].f[2], &face_array3[i].f[3]);
+        }
+    }
+    fclose(fr3);
+}
+
+
+void computeNormal1(){
+
+    //computing face normal
+    for (int i = 0; i<tot_faces; i++) {  //tot_faces=6
+
+        int value0 = face_array1[i].f[0];
+        int value1 = face_array1[i].f[1];
+        int value2 = face_array1[i].f[2];
+        int value3 = face_array1[i].f[3];
+
+        //printf("face array: %d, %d, %d\n", value0, value1, value2);
+
+        v1x=vertices_array1[value1].x - vertices_array1[value0].x;
+        v1y=vertices_array1[value1].y - vertices_array1[value0].y;
+        v1z=vertices_array1[value1].z - vertices_array1[value0].z;
+
+        //printf("v1x: %f\nv1y: %f\nv1z: %f\n", v1x,v1y,v1z);
+
+        v2x= vertices_array1[value2].x - vertices_array1[value1].x ;
+        v2y= vertices_array1[value2].y - vertices_array1[value1].y;
+        v2z= vertices_array1[value2].z - vertices_array1[value1].z ;
+
+        //printf("v2x: %f\nv2y: %f\nv2z: %f\n", v2x,v2y,v2z);
+
+        //cross product and facenormal
+        face_array1[i].nx = (v1y * v2z) - (v1z * v2y);
+        face_array1[i].ny = (v1z * v2x) - (v1x * v2z);
+        face_array1[i].nz = (v1x * v2y) - (v1y * v2x);
+
+        //printf("face normal x: %f\nface normal y: %f\nface normal z: %f\n", face_array[i].nx,face_array[i].ny,face_array[i].nz);
+
+        //adding all the face normals
+        vertices_array1[value0].fx = vertices_array1[value0].fx + face_array1[i].nx;
+        vertices_array1[value0].fy = vertices_array1[value0].fy + face_array1[i].ny;
+        vertices_array1[value0].fz = vertices_array1[value0].fz + face_array1[i].nz;
+        vertices_array1[value0].eachctr++;
+
+        vertices_array1[value1].fx = vertices_array1[value1].fx + face_array1[i].nx;
+        vertices_array1[value1].fy = vertices_array1[value1].fy + face_array1[i].ny;
+        vertices_array1[value1].fz = vertices_array1[value1].fz + face_array1[i].nz;
+        vertices_array1[value1].eachctr++;
+
+        vertices_array1[value2].fx = vertices_array1[value2].fx + face_array1[i].nx;
+        vertices_array1[value2].fy = vertices_array1[value2].fy + face_array1[i].ny;
+        vertices_array1[value2].fz = vertices_array1[value2].fz + face_array1[i].nz;
+        vertices_array1[value2].eachctr++;
+
+        if(face_array1[i].num_faces == 4) {
+
+            vertices_array1[value3].fx = vertices_array1[value3].fx + face_array1[i].nx;
+            vertices_array1[value3].fy = vertices_array1[value3].fy + face_array1[i].ny;
+            vertices_array1[value3].fz = vertices_array1[value3].fz + face_array1[i].nz;
+            vertices_array1[value3].eachctr++;
+        }
+    }
+    for(int i = 0; i< num_points; i++){
+        vertices_array1[i].vnx = vertices_array1[i].fx/vertices_array1[i].eachctr;
+        vertices_array1[i].vny = vertices_array1[i].fy/vertices_array1[i].eachctr;
+        vertices_array1[i].vnz = vertices_array1[i].fz/vertices_array1[i].eachctr;
+    }
+
+    //Computing for 2nd diagram ----------------------------------------------------------------------
+    for (int i = 0; i<tot_faces2; i++) {  //tot_faces=6
+
+        int value0 = face_array2[i].f[0];
+        int value1 = face_array2[i].f[1];
+        int value2 = face_array2[i].f[2];
+        int value3 = face_array2[i].f[3];
+
+        //printf("face array: %d, %d, %d\n", value0, value1, value2);
+
+        v1x=vertices_array2[value1].x - vertices_array2[value0].x;
+        v1y=vertices_array2[value1].y - vertices_array2[value0].y;
+        v1z=vertices_array2[value1].z - vertices_array2[value0].z;
+
+        //printf("v1x: %f\nv1y: %f\nv1z: %f\n", v1x,v1y,v1z);
+
+        v2x= vertices_array2[value2].x - vertices_array2[value1].x ;
+        v2y= vertices_array2[value2].y - vertices_array2[value1].y;
+        v2z= vertices_array2[value2].z - vertices_array2[value1].z ;
+
+        //printf("v2x: %f\nv2y: %f\nv2z: %f\n", v2x,v2y,v2z);
+
+        //cross product and facenormal
+        face_array2[i].nx = (v1y * v2z) - (v1z * v2y);
+        face_array2[i].ny = (v1z * v2x) - (v1x * v2z);
+        face_array2[i].nz = (v1x * v2y) - (v1y * v2x);
+
+        //printf("face normal x: %f\nface normal y: %f\nface normal z: %f\n", face_array[i].nx,face_array[i].ny,face_array[i].nz);
+
+        //adding all the face normals
+        vertices_array2[value0].fx = vertices_array2[value0].fx + face_array2[i].nx;
+        vertices_array2[value0].fy = vertices_array2[value0].fy + face_array2[i].ny;
+        vertices_array2[value0].fz = vertices_array2[value0].fz + face_array2[i].nz;
+        vertices_array2[value0].eachctr++;
+
+        vertices_array2[value1].fx = vertices_array2[value1].fx + face_array2[i].nx;
+        vertices_array2[value1].fy = vertices_array2[value1].fy + face_array2[i].ny;
+        vertices_array2[value1].fz = vertices_array2[value1].fz + face_array2[i].nz;
+        vertices_array2[value1].eachctr++;
+
+        vertices_array2[value2].fx = vertices_array2[value2].fx + face_array2[i].nx;
+        vertices_array2[value2].fy = vertices_array2[value2].fy + face_array2[i].ny;
+        vertices_array2[value2].fz = vertices_array2[value2].fz + face_array2[i].nz;
+        vertices_array2[value2].eachctr++;
+
+        if(face_array2[i].num_faces == 4) {
+
+            vertices_array2[value3].fx = vertices_array2[value3].fx + face_array2[i].nx;
+            vertices_array2[value3].fy = vertices_array2[value3].fy + face_array2[i].ny;
+            vertices_array2[value3].fz = vertices_array2[value3].fz + face_array2[i].nz;
+            vertices_array2[value3].eachctr++;
+        }
+    }
+    for(int i = 0; i< num_points; i++){
+        vertices_array2[i].vnx = vertices_array2[i].fx/vertices_array2[i].eachctr;
+        vertices_array2[i].vny = vertices_array2[i].fy/vertices_array2[i].eachctr;
+        vertices_array2[i].vnz = vertices_array2[i].fz/vertices_array2[i].eachctr;
+    }
+
+    //Computing for 3rd diagram ----------------------------------------------------------------------
+    for (int i = 0; i<tot_faces3; i++) {  //tot_faces=6
+
+        int value0 = face_array3[i].f[0];
+        int value1 = face_array3[i].f[1];
+        int value2 = face_array3[i].f[2];
+        int value3 = face_array3[i].f[3];
+
+        //printf("face array: %d, %d, %d\n", value0, value1, value2);
+
+        v1x=vertices_array3[value1].x - vertices_array3[value0].x;
+        v1y=vertices_array3[value1].y - vertices_array3[value0].y;
+        v1z=vertices_array3[value1].z - vertices_array3[value0].z;
+
+        //printf("v1x: %f\nv1y: %f\nv1z: %f\n", v1x,v1y,v1z);
+
+        v2x= vertices_array3[value2].x - vertices_array3[value1].x ;
+        v2y= vertices_array3[value2].y - vertices_array3[value1].y;
+        v2z= vertices_array3[value2].z - vertices_array3[value1].z ;
+
+        //printf("v2x: %f\nv2y: %f\nv2z: %f\n", v2x,v2y,v2z);
+
+        //cross product and facenormal
+        face_array3[i].nx = (v1y * v2z) - (v1z * v2y);
+        face_array3[i].ny = (v1z * v2x) - (v1x * v2z);
+        face_array3[i].nz = (v1x * v2y) - (v1y * v2x);
+
+        //printf("face normal x: %f\nface normal y: %f\nface normal z: %f\n", face_array[i].nx,face_array[i].ny,face_array[i].nz);
+
+        //adding all the face normals
+        vertices_array3[value0].fx = vertices_array3[value0].fx + face_array3[i].nx;
+        vertices_array3[value0].fy = vertices_array3[value0].fy + face_array3[i].ny;
+        vertices_array3[value0].fz = vertices_array3[value0].fz + face_array3[i].nz;
+        vertices_array3[value0].eachctr++;
+
+        vertices_array3[value1].fx = vertices_array3[value1].fx + face_array3[i].nx;
+        vertices_array3[value1].fy = vertices_array3[value1].fy + face_array3[i].ny;
+        vertices_array3[value1].fz = vertices_array3[value1].fz + face_array3[i].nz;
+        vertices_array3[value1].eachctr++;
+
+        vertices_array3[value2].fx = vertices_array3[value2].fx + face_array3[i].nx;
+        vertices_array3[value2].fy = vertices_array3[value2].fy + face_array3[i].ny;
+        vertices_array3[value2].fz = vertices_array3[value2].fz + face_array3[i].nz;
+        vertices_array3[value2].eachctr++;
+
+        if(face_array3[i].num_faces == 4) {
+
+            vertices_array3[value3].fx = vertices_array3[value3].fx + face_array3[i].nx;
+            vertices_array3[value3].fy = vertices_array3[value3].fy + face_array3[i].ny;
+            vertices_array3[value3].fz = vertices_array3[value3].fz + face_array3[i].nz;
+            vertices_array3[value3].eachctr++;
+        }
+    }
+    for(int i = 0; i< num_points; i++){
+        vertices_array3[i].vnx = vertices_array3[i].fx/vertices_array3[i].eachctr;
+        vertices_array3[i].vny = vertices_array3[i].fy/vertices_array3[i].eachctr;
+        vertices_array3[i].vnz = vertices_array3[i].fz/vertices_array3[i].eachctr;
+    }
+
+}
+
+void render_hand(){
+    for (int i = 0; i<tot_faces; i++) {
+        if(face_array1[i].num_faces > 2){
+            f0= face_array1[i].f[0];
+            f1=face_array1[i].f[1];
+            f2=face_array1[i].f[2];
+
+            glColor3f(0, 1, 1);
+
+            if(face_array1[i].num_faces == 3) {
+
+                glBegin(GL_TRIANGLES);
+                glNormal3f(vertices_array1[f0].vnx, vertices_array1[f0].vny, vertices_array1[f0].vnz);
+                glVertex3f(vertices_array1[f0].x, vertices_array1[f0].y, vertices_array1[f0].z);
+
+                glNormal3f(vertices_array1[f1].vnx, vertices_array1[f1].vny, vertices_array1[f1].vnz);
+                glVertex3f(vertices_array1[f1].x, vertices_array1[f1].y, vertices_array1[f1].z);
+
+                glNormal3f(vertices_array1[f2].vnx, vertices_array1[f2].vny, vertices_array1[f2].vnz);
+                glVertex3f(vertices_array1[f2].x, vertices_array1[f2].y, vertices_array1[f2].z);
+                glEnd();
+
+
+            }
+            else {
+
+                f3=face_array1[i].f[3];
+
+                glBegin(GL_QUADS);
+
+                glNormal3f(vertices_array1[f0].vnx, vertices_array1[f0].vny, vertices_array1[f0].vnz);
+                glVertex3f(vertices_array1[f0].x, vertices_array1[f0].y, vertices_array1[f0].z);
+
+                glNormal3f(vertices_array1[f1].vnx, vertices_array1[f1].vny, vertices_array1[f1].vnz);
+                glVertex3f(vertices_array1[f1].x, vertices_array1[f1].y, vertices_array1[f1].z);
+
+                glNormal3f(vertices_array1[f2].vnx, vertices_array1[f2].vny, vertices_array1[f2].vnz);
+                glVertex3f(vertices_array1[f2].x, vertices_array1[f2].y, vertices_array1[f2].z);
+
+                glNormal3f(vertices_array1[f3].vnx, vertices_array1[f3].vny, vertices_array1[f3].vnz);
+                glVertex3f(vertices_array1[f3].x, vertices_array1[f3].y, vertices_array1[f3].z);
+
+                glEnd();
+
+            }
+        }
+    }
+}
+void render_ball(){
+    //Rendering image 2----------------------------------------------------------------------------------
+    for (int i = 0; i<tot_faces2; i++) {
+        if(face_array2[i].num_faces > 2){
+            f0= face_array2[i].f[0];
+            f1=face_array2[i].f[1];
+            f2=face_array2[i].f[2];
+
+            glColor3f(0, 1, 1);
+
+            if(face_array2[i].num_faces == 3) {
+
+                glBegin(GL_TRIANGLES);
+                glNormal3f(vertices_array2[f0].vnx, vertices_array2[f0].vny, vertices_array2[f0].vnz);
+                glVertex3f(vertices_array2[f0].x, vertices_array2[f0].y, vertices_array2[f0].z);
+
+                glNormal3f(vertices_array2[f1].vnx, vertices_array2[f1].vny, vertices_array2[f1].vnz);
+                glVertex3f(vertices_array2[f1].x, vertices_array2[f1].y, vertices_array2[f1].z);
+
+                glNormal3f(vertices_array2[f2].vnx, vertices_array2[f2].vny, vertices_array2[f2].vnz);
+                glVertex3f(vertices_array2[f2].x, vertices_array2[f2].y, vertices_array2[f2].z);
+                glEnd();
+
+
+            }
+            else {
+
+                f3=face_array2[i].f[3];
+
+                glBegin(GL_QUADS);
+
+                glNormal3f(vertices_array2[f0].vnx, vertices_array2[f0].vny, vertices_array2[f0].vnz);
+                glVertex3f(vertices_array2[f0].x, vertices_array2[f0].y, vertices_array2[f0].z);
+
+                glNormal3f(vertices_array2[f1].vnx, vertices_array2[f1].vny, vertices_array2[f1].vnz);
+                glVertex3f(vertices_array2[f1].x, vertices_array2[f1].y, vertices_array2[f1].z);
+
+                glNormal3f(vertices_array2[f2].vnx, vertices_array2[f2].vny, vertices_array2[f2].vnz);
+                glVertex3f(vertices_array2[f2].x, vertices_array2[f2].y, vertices_array2[f2].z);
+
+                glNormal3f(vertices_array2[f3].vnx, vertices_array2[f3].vny, vertices_array2[f3].vnz);
+                glVertex3f(vertices_array2[f3].x, vertices_array2[f3].y, vertices_array2[f3].z);
+                
+                glEnd();
+                
+            }
+        }
+    }
+}
+void render_cube(){
+
+    //Rendering image 3----------------------------------------------------------------------------------
+    for (int i = 0; i<tot_faces3; i++) {
+        if(face_array3[i].num_faces > 2){
+            f0= face_array3[i].f[0];
+            f1=face_array3[i].f[1];
+            f2=face_array3[i].f[2];
+
+            glColor3f(0, 1, 1);
+
+            if(face_array3[i].num_faces == 3) {
+
+                glBegin(GL_TRIANGLES);
+                glNormal3f(vertices_array3[f0].vnx, vertices_array3[f0].vny, vertices_array3[f0].vnz);
+                glVertex3f(vertices_array3[f0].x, vertices_array3[f0].y, vertices_array3[f0].z);
+
+                glNormal3f(vertices_array3[f1].vnx, vertices_array3[f1].vny, vertices_array3[f1].vnz);
+                glVertex3f(vertices_array3[f1].x, vertices_array3[f1].y, vertices_array3[f1].z);
+
+                glNormal3f(vertices_array3[f2].vnx, vertices_array3[f2].vny, vertices_array3[f2].vnz);
+                glVertex3f(vertices_array3[f2].x, vertices_array3[f2].y, vertices_array3[f2].z);
+                glEnd();
+
+
+            }
+            else {
+
+                f3=face_array3[i].f[3];
+
+                glBegin(GL_QUADS);
+
+                glNormal3f(vertices_array3[f0].vnx, vertices_array3[f0].vny, vertices_array3[f0].vnz);
+                glVertex3f(vertices_array3[f0].x, vertices_array3[f0].y, vertices_array3[f0].z);
+
+                glNormal3f(vertices_array3[f1].vnx, vertices_array3[f1].vny, vertices_array3[f1].vnz);
+                glVertex3f(vertices_array3[f1].x, vertices_array3[f1].y, vertices_array3[f1].z);
+
+                glNormal3f(vertices_array3[f2].vnx, vertices_array3[f2].vny, vertices_array3[f2].vnz);
+                glVertex3f(vertices_array3[f2].x, vertices_array3[f2].y, vertices_array3[f2].z);
+
+                glNormal3f(vertices_array3[f3].vnx, vertices_array3[f3].vny, vertices_array3[f3].vnz);
+                glVertex3f(vertices_array3[f3].x, vertices_array3[f3].y, vertices_array3[f3].z);
+                
+                glEnd();
+                
+            }
+        }
+    }
+
+}
+
+void boundingbox(){
+
+    minx = vertices_array1[0].x;
+    miny = vertices_array1[0].y;
+    minz = vertices_array1[0].z;
+
+    maxx = vertices_array1[0].x;
+    maxy = vertices_array1[0].y;
+    maxz = vertices_array1[0].z;
+
+    for(int i=1; i< num_points; i++){
+        if(minx > vertices_array1[i].x){
+            minx = vertices_array1[i].x;
+        }
+
+        if(miny > vertices_array1[i].y){
+            miny = vertices_array1[i].y;
+        }
+
+        if(minz > vertices_array1[i].z){
+            minz = vertices_array1[i].z;
+        }
+
+        if(maxx < vertices_array1[i].x){
+            maxx = vertices_array1[i].x;
+        }
+
+        if(maxy < vertices_array1[i].y){
+            maxy = vertices_array1[i].y;
+        }
+
+        if(maxz < vertices_array1[i].z){
+            maxz = vertices_array1[i].z;
+        }
+    }
+}
+
+void draw() {
+    glColor3f(0.0f, 1.0f, 0.0f);
+    glTranslatef(0.0f ,0.75f, 0.0f);
+    //glRotatef(45, 0, 0, 0);
+    //glScalef(3, 4, 2);
+    //glutSolidSphere(0.75f,20,20);
+
+
+    if(trans == GL_TRUE){
+
+        if(hand1 == GL_TRUE){
+            glTranslatef(xt1, yt1, zt1);
+            glRotatef(rr1, xr1, yr1, zr1);
+            glScalef(xs1, ys1, zs1);
+            render_hand();
+            boundingbox();
+        }
+
+        if(cube1 == GL_TRUE){
+            glTranslatef(xt1, yt1, zt1);
+            glRotatef(rr1, xr1, yr1, zr1);
+            glScalef(xs1, ys1, zs1);
+            render_cube();
+        }
+
+        if(ball1 == GL_TRUE){
+            glTranslatef(xt1, yt1, zt1);
+            glRotatef(rr1, xr1, yr1, zr1);
+            glScalef(xs1, ys1, zs1);
+            render_ball();
+        }
+
+        if(hand2 == GL_TRUE){
+            glTranslatef(xt2, yt2, zt2);
+            glRotatef(rr2, xr2, yr2, zr2);
+            glScalef(xs3, ys3, zs3);
+            render_hand();
+            boundingbox();
+        }
+
+        if(cube2 == GL_TRUE){
+            glTranslatef(xt2, yt2, zt2);
+            glRotatef(rr2, xr2, yr2, zr2);
+            glScalef(xs2, ys2, zs2);
+            render_cube();
+        }
+
+        if(ball2 == GL_TRUE){
+            glTranslatef(xt2, yt2, zt2);
+            glRotatef(rr2, xr2, yr2, zr2);
+            glScalef(xs2, ys2, zs2);
+            render_ball();
+        }
+
+        if(hand3 == GL_TRUE){
+            glTranslatef(xt3, yt3, zt3);
+            glRotatef(rr3, xr3, yr3, zr3);
+            glScalef(xs3, ys3, zs3);
+            render_hand();
+            boundingbox();
+        }
+
+        if(cube1 == GL_TRUE){
+            glTranslatef(xt3, yt3, zt3);
+            glRotatef(rr3, xr3, yr3, zr3);
+            glScalef(xs3, ys3, zs3);
+            render_cube();
+        }
+
+        if(ball3 == GL_TRUE){
+            glTranslatef(xt3, yt3, zt3);
+            glRotatef(rr3, xr3, yr3, zr3);
+            glScalef(xs3, ys3, zs3);
+            render_ball();
+        }
+
+    }
+
+    else{
+
+        if(color == GL_TRUE){
+        if(wx > minx && wx < maxx && wz > minz && wz < maxz && 0.1 <= wy <=100){
+
+            printf("hi");
+        glColor3f(0, 0, 1);
+        render_hand();
+        boundingbox();
+    }
+        else{
+        render_hand();
+            boundingbox();}
+        }
+
+    glTranslatef(2.5, 0.5, 0);
+    render_ball();
+
+    glTranslatef(-4.5, 0, 0);
+    render_cube();
+
+    glTranslatef(0, 0, -4);
+    render_ball();
+
+    glTranslatef(2.5, 0, -5);
+    render_cube();
+    }
+
+//    glBegin(GL_QUADS);
+//    glVertex3f(1, 1, 1);
+//    glEnd();
+}
+
+void renderScene(void) {
+    // Clear Color and Depth Buffers
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glMatrixMode(GL_PROJECTION);
+
+    //glColor3f(0.6f, 0.8f, 1);
+    // Reset Matrix
+    glLoadIdentity();
+
+    // Set the viewport to be the entire window
+//    glViewport(0, 0, w, h);
+
+    // Set the correct perspective.
+
+    if(ortho == GL_TRUE){
+
+        //glFrustum(-50, 50, 50, -50, .1, 100.0f);
+                glOrtho(-10, 10,		/* x extents */
+               -10, 10,		/* y extents */
+               .1, 100);		/* z extents */
+    }
+    else{
+
+    gluPerspective(45.0f, 1.0, 0.1f, 100.0f);
+    }
+
+  //  glFrustum(-50, 50, 50, -50, .1, 100.0f);
+
+    // Get Back to the Modelview
+    glMatrixMode(GL_MODELVIEW);
+
+
+    // Reset transformations
+    glLoadIdentity();
+    // Set the camera
+    gluLookAt(px, 1.0f, pz,
+              px+lx, 1.0f, pz+lz,
+              0.0f, 1.0f, 0.0f);
+
+    // Draw ground
+    glColor3f(0.9f, 1.0f, 0.8f);
+    glBegin(GL_QUADS);
+    glVertex3f(-100.0f, 0.0f, -100.0f);
+    glVertex3f(-100.0f, 0.0f, 100.0f);
+    glVertex3f( 100.0f, 0.0f, 100.0f);
+    glVertex3f( 100.0f, 0.0f, -100.0f);
+    glEnd();
+
+    // Draw 20 sphere
+    //for(int i = -1; i < 1; i++)
+      //  for(int j=-1; j < 1; j++) {
+        //    glPushMatrix();
+          //  glTranslatef(i*10.0,0,j * 10.0);
+            draw();
+            //glPopMatrix();
+        //}
+
+    glutSwapBuffers();
+}
+
+void changeSize(int w, int h) {
+
+    if (h == 0)
+        h = 1;
+    float ratio = w * 1.0 / h;
+
+    // Use the Projection Matrix
+    glMatrixMode(GL_PROJECTION);
+
+    // Reset Matrix
+    glLoadIdentity();
+
+    // Set the viewport to be the entire window
+    glViewport(0, 0, w, h);
+
+    // Set the correct perspective.
+
+    if(ortho == GL_TRUE){
+        glOrtho(-10, 10,		/* x extents */
+                -10, 10,		/* y extents */
+                .1, 100);		/* z extents */
+
+    }
+    //if(pers == GL_TRUE){
+    gluPerspective(45.0f, ratio, 0.1f, 100.0f);
+
+//    }
+
+    // Get Back to the Modelview
+    glMatrixMode(GL_MODELVIEW);
+}
+
+void processNormalKeys(unsigned char key, int x, int y) {
+
+    if (key == 27)
+        exit(0);
+
+    switch (key) {
+
+case 'o': case 'O':
+    ortho=GL_TRUE;
+    break;
+
+case 't': case 'T':
+    trans = GL_TRUE;
+    break;
+
+
+case 'c': case 'C':
+    color = GL_TRUE;
+    break;
+}
+}
+
+void mouse(int button, int state, int x, int y)
+{
+
+    oldx = x;
+    oldy = y;
+
+    GLint viewport[4];
+    GLdouble mvmatrix[16], projmatrix[16];
+
+    GLint realy;  /*  OpenGL y coordinate position  */
+
+    switch (button) {
+        case GLUT_LEFT_BUTTON:
+            if (state == GLUT_DOWN) {
+                glGetIntegerv (GL_VIEWPORT, viewport);
+                glGetDoublev (GL_MODELVIEW_MATRIX, mvmatrix);
+                glGetDoublev (GL_PROJECTION_MATRIX, projmatrix);
+                realy = viewport[3] - (GLint) y - 1;
+                gluUnProject ((GLdouble) x, (GLdouble) realy, 0.0,
+                              mvmatrix, projmatrix, viewport, &wx, &wy, &wz);
+                glutPostRedisplay();
+            }
+            break;
+
+        default:
+            break;
+    }
+}
+
+void mousefunc(int x, int y){
+
+    newx = x;
+    newy = y;
+
+    float dx, dy;
+
+    dx = newx - oldx;
+    dy = newy - oldy;
+
+    if(dx >= 1){
+
+        angle += 0.01f;
+        lx = sin(angle);
+        lz = -cos(angle);
+    }
+
+    else{
+
+        angle -= 0.01f;
+        lx = sin(angle);
+        lz = -cos(angle);
+    }
+
+    if(dy >=1){
+
+        x += lx * 0.01f;
+        pz += lz * 0.01f;
+    }
+
+    else{
+
+        x -= lx * 0.01f;
+        pz -= lz * 0.01f;
+    }
+
+}
+
+void processSpecialKeys(int key, int xx, int yy) {
+    float fraction = 0.1f;
+    switch (key) {
+
+        case GLUT_KEY_LEFT :
+            angle -= 0.01f;
+            lx = sin(angle);
+            lz = -cos(angle);
+            break;
+        case GLUT_KEY_RIGHT :
+            angle += 0.01f;
+            lx = sin(angle);
+            lz = -cos(angle);
+            break;
+        case GLUT_KEY_UP :
+            if(px > minx && px < maxx && pz > minz && pz < maxz){}
+
+            else{
+                px += lx * fraction;
+                pz += lz * fraction;}
+            break;
+        case GLUT_KEY_DOWN :
+            px -= lx * fraction;
+            pz -= lz * fraction;
+            break;
+
+    }
+}
+
+void main(int argc, char **argv) {
+
+    float lightdir[4] = {1,1,2,0};	/* homogeneous light position: directional if w=0 */
+    float white[4] = {1,1,1,1}; 		/* color for light: glLightfv needs 4 components!*/
+    float dim[4] = {.2,.2,.2,1};
+
+    // init GLUT and create window
+    fileread(argv);
+    computeNormal1();
+    //boundingbox();
+
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+    glutInitWindowPosition(100,100);
+    glutInitWindowSize(620,620);
+    glutCreateWindow("Sphere World");
+
+    glEnable(GL_DEPTH_TEST);		/* tell OpenGL to handle overlapping surfaces */
+    glEnable(GL_COLOR_MATERIAL);		/* map glColor to surface colors used by lighting */
+    glEnable(GL_NORMALIZE);		/* tell GL to normalize normals so we don't have to */
+
+    /* set up one light for both directional and ambient */
+    glLightfv(GL_LIGHT0, GL_AMBIENT, dim);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
+    glLightfv(GL_LIGHT0, GL_POSITION, lightdir);
+    glEnable(GL_LIGHT0);			/* turn on this light */
+    glEnable(GL_LIGHTING);
+    // register callbacks
+    glutDisplayFunc(renderScene);
+    glutReshapeFunc(changeSize);
+    glutIdleFunc(renderScene);
+    glutKeyboardFunc(processNormalKeys);
+    glutSpecialFunc(processSpecialKeys);
+    glutMouseFunc(mouse);
+    glutMotionFunc(mousefunc);
+    
+    // OpenGL init
+    glEnable(GL_DEPTH_TEST);
+    
+    // enter GLUT event processing cycle
+    glutMainLoop();
+    
+}

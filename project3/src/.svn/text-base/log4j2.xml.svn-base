@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%level: %m%n"/>
+		</Console>
+		
+		<File name="File" fileName="debug.log">
+			<PatternLayout pattern="%level: %m%n"/>
+		</File>
+	</Appenders>
+
+	<Loggers>
+		<Root level="DEBUG">
+			<AppenderRef ref="Console" level="DEBUG" />
+			<AppenderRef ref="File" level="ALL" />
+		</Root>
+	</Loggers>
+</Configuration>

@@ -1,0 +1,224 @@
+10
+
+dir
+82
+https://www.cs.usfca.edu/svn/ssrajani2/cs212/project3
+https://www.cs.usfca.edu/svn/ssrajani2
+
+
+
+2013-11-23T02:20:53.503812Z
+82
+sjengle
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+393b24fa-5e4b-49af-9b1e-08b937af8777
+
+
+
+
+
+
+
+immediates
+
+.classpath
+file
+0
+
+
+add
+
+.project
+file
+0
+
+
+add
+
+.settings
+dir
+
+
+
+add
+
+input
+dir
+
+
+
+add
+
+invertedindex-1threads.txt
+file
+0
+
+
+add
+
+invertedindex-2threads.txt
+file
+0
+
+
+add
+
+invertedindex-badargs.txt
+file
+0
+
+
+add
+
+invertedindex-baddir.txt
+file
+0
+
+
+add
+
+invertedindex-gutenberg.txt
+file
+0
+
+
+add
+
+invertedindex-index.txt
+file
+0
+
+
+add
+
+invertedindex-reversed.txt
+file
+0
+
+
+add
+
+invertedindex-rfcs.txt
+file
+0
+
+
+add
+
+log4j2.xml
+file
+0
+
+
+add
+
+output
+dir
+
+
+
+add
+
+searchresults-1threads.txt
+file
+0
+
+
+add
+
+searchresults-2threads.txt
+file
+0
+
+
+add
+
+searchresults-3threads.txt
+file
+0
+
+
+add
+
+searchresults-index-alphabet.txt
+file
+0
+
+
+add
+
+searchresults-index-multi.txt
+file
+0
+
+
+add
+
+searchresults-index-simple.txt
+file
+0
+
+
+add
+
+searchresults-simple-alphabet.txt
+file
+0
+
+
+add
+
+searchresults-simple-simple.txt
+file
+0
+
+
+add
+
+src
+dir
+
+src.zip
+file
+0
+
+
+add
+
+
+
+
+
+has-props
+has-prop-mods
+
+temp1527786141207253952
+dir
+
+
+
+add
+
+temp8972390602862928851
+dir
+
+
+
+add
+
+tests
+dir
+

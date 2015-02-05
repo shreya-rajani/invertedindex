@@ -1,0 +1,15 @@
+two
+"/Users/shreyarajani/MS-Sem1/SD/prog/project4/input/index/simple/position.txt", 1, 2
+
+chickadee
+
+aa
+"/Users/shreyarajani/MS-Sem1/SD/prog/project4/input/index/simple/capital_extension.TXT", 1, 1
+
+t
+"/Users/shreyarajani/MS-Sem1/SD/prog/project4/input/index/simple/position.txt", 6, 2
+
+elephant antelope
+"/Users/shreyarajani/MS-Sem1/SD/prog/project4/input/index/simple/symbols.txt", 9, 1
+"/Users/shreyarajani/MS-Sem1/SD/prog/project4/input/index/simple/capitals.txt", 4, 1
+

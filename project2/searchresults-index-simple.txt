@@ -1,0 +1,47 @@
+two
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/gutenberg/pg2701.txt", 295, 833
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/gutenberg/pg98.txt", 219, 9
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/gutenberg/pg1661.txt", 150, 1385
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/gutenberg/pg1342.txt", 135, 1086
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/gutenberg/pg1322.txt", 77, 2602
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/rfcs/rfc3031.txt", 43, 859
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/gutenberg/pg11.txt", 39, 2038
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/rfcs/rfc6797.txt", 8, 1621
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/rfcs/rfc6841.txt", 6, 712
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/rfcs/rfc6819.txt", 6, 1826
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/rfcs/rfc6805.txt", 4, 2736
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/simple/position.txt", 1, 2
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/rfcs/rfc475.txt", 1, 66
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/rfcs/rfc6838.txt", 1, 8574
+
+chickadee
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/gutenberg/pg1322.txt", 1, 8899
+
+aa
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/gutenberg/pg98.txt", 3, 8147
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/rfcs/rfc3031.txt", 3, 8797
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/simple/capital_extension.TXT", 1, 1
+
+t
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/gutenberg/pg2701.txt", 35537, 1
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/gutenberg/pg98.txt", 21089, 1
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/gutenberg/pg1322.txt", 20560, 1
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/gutenberg/pg1342.txt", 16346, 1
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/gutenberg/pg1661.txt", 15384, 3
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/gutenberg/pg11.txt", 4806, 10
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/rfcs/rfc6819.txt", 3397, 3
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/rfcs/rfc3031.txt", 3248, 15
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/rfcs/rfc6797.txt", 1762, 3
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/rfcs/rfc6838.txt", 1624, 3
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/rfcs/rfc6805.txt", 1352, 3
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/rfcs/rfc6841.txt", 984, 3
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/rfcs/rfc475.txt", 491, 21
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/simple/position.txt", 6, 2
+
+elephant antelope
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/gutenberg/pg2701.txt", 32, 16931
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/simple/symbols.txt", 9, 1
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/simple/capitals.txt", 4, 1
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/gutenberg/pg1322.txt", 1, 33736
+"/Users/shreyarajani/MS-Sem1/SD/prog/project2/input/index/gutenberg/pg98.txt", 1, 63867
+

@@ -1,0 +1,77 @@
+10
+
+dir
+0
+https://www.cs.usfca.edu/svn/ssrajani2/cs212/project3/input/index/rfcs
+https://www.cs.usfca.edu/svn/ssrajani2
+add
+
+
+
+
+
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+393b24fa-5e4b-49af-9b1e-08b937af8777
+
+rfc3031.txt
+file
+
+
+
+add
+
+rfc475.txt
+file
+
+
+
+add
+
+rfc6797.txt
+file
+
+
+
+add
+
+rfc6805.txt
+file
+
+
+
+add
+
+rfc6819.txt
+file
+
+
+
+add
+
+rfc6838.txt
+file
+
+
+
+add
+
+rfc6841.txt
+file
+
+
+
+add
+
